@@ -1280,6 +1280,55 @@ var meuWebApp = (function(){
 meuWebApp.ver_nome(acessos, usuarios); // O console mostrará os dados dos objetos 'acessos' e 'usuarios'.
 */
 
-//5
-
 //4
+function requisicaoPergunta(callback) {
+    $.ajax({
+        url: "https://opentdb.com/api.php?amount=10&category=21",
+        type: "GET",
+        dataType: "json",
+        success: function(data){
+            callback(data.results[0]);
+        },
+        error: function(){
+            console.log("Erro na requisição!");
+        }
+    });
+}
+
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+}
+
+function gerarPergunta(pergunta){
+    $("#pergunta").html(pergunta.question);
+    var respostaCorreta = pergunta.correct_answer; 
+    var respostas = pergunta.incorrect_answers;
+
+    respostas.push(respostaCorreta);
+    respostas = shuffle(respostas);
+
+    // console.log("RC: " + respostaCorreta);
+    // console.log("R: " + respostas);
+    
+    for(i=0; i<respostas.length; i++){
+        $("#opcoes").append("<input type='radio' name='opcao' value=" + respostas[i] + ">" + respostas[i] + "<br>");
+    }
+     
+}
+
+requisicaoPergunta(gerarPergunta);
