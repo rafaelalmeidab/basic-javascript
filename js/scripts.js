@@ -1326,9 +1326,39 @@ function gerarPergunta(pergunta){
     // console.log("R: " + respostas);
     
     for(i=0; i<respostas.length; i++){
-        $("#opcoes").append("<input type='radio' name='opcao' value=" + respostas[i] + ">" + respostas[i] + "<br>");
+        $("#opcoes").append("<input type='radio' name='opcao' value=" + respostas[i] + "> " + respostas[i] + "<br>");
     }
-     
+
+
+    $("#opcoes input[name='opcao']").change(function(){
+        $("#submitAPI").show();
+    });
+    
+    $("#submitAPI").click(function(){
+        var ans =  $("#opcoes input[name='opcao']:checked").val();
+        $("#submitAPI").hide();
+
+        if(ans == respostaCorreta){
+            $("#erroAcerto").html("You made it!");
+        }
+        else{
+            $("#erroAcerto").html("You almost made it! The correct answer is " + respostaCorreta + ".");    
+        }
+
+        $("#opcoes input[name='opcao']").attr("disabled", true);
+        $("#playAgain").show();
+    });
+    
 }
 
 requisicaoPergunta(gerarPergunta);
+
+$("#playAgain").click(function(){
+
+    $("#opcoes").html("");
+    $("#erroAcerto").html("");
+    $("#pergunta").html("");
+    $("#playAgain").hide("");
+
+    requisicaoPergunta(gerarPergunta);
+});
