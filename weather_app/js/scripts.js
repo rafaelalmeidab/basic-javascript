@@ -51,9 +51,9 @@ $(function(){
                 catch{
                     weatherObject.cidade = data.LocalizedName;
                 }
+            
                 weatherObject.estado      = data.AdministrativeArea.LocalizedName; 
                 weatherObject.pais        = data.Country.LocalizedName;
-            
                 
                 var cityKey = data.Key;
                 getTempoAtual(cityKey);
@@ -72,8 +72,9 @@ $(function(){
             success: function(data){
                 weatherObject.tempetarura = data[0].Temperature.Metric;
                 weatherObject.textoClima  = data[0].WeatherText;
-                weatherObject.iconeClima  = "";
-
+                var iconNumber = data[0].WeatherIcon <= 9 ? "0" + String(data[0].WeatherIcon) : data[0].WeatherIcon;
+                weatherObject.iconeClima  = "https://developer.accuweather.com/sites/default/files/" + iconNumber + "-s.png";
+                
                 setDadosClima(weatherObject);
             },
             error: function(){
@@ -83,23 +84,12 @@ $(function(){
     }
 
     function setDadosClima(dados){
-        dados = { "cidade": "Rio de Janeiro",
-                  "estado": "Rio De Janeiro",
-                  "iconeClima": "",
-                  "pais": "Brazil",
-                  "tempetarura":
-                    {
-                        "Unit":"C",
-                        "Value":"25"
-                    },
-                  "textoClima": "Mostly cloudy"
-        };
-
-        console.log(dados);
         $("#texto_local").html(dados.cidade + ", " + dados.estado + ", " + dados.pais);
         $("#texto_clima").html(dados.textoClima);
         $('#texto_temperatura').html(String(dados.tempetarura.Value) + "&deg;");
+        $('#icone_clima').css('background-image', "url('" + weatherObject.iconeClima + "')");
     }
 
-    setDadosClima(''); 
+    getCoordenadasIP();
+    // setDadosClima(''); 
 });
